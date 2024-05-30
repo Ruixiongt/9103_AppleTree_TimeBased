@@ -1,7 +1,19 @@
+/*
+TODO: ADD All Object for four seasons 
+           (1)Sun -function  
+           (2)Rain Drops - function
+           (3) Cloud - Class 
+           (4) Wind - Wind
+
+           (5) Shadow
+ TODO: Set four seasons with frame count
+*/
+
 function setup() {
   // Set the canvas size
-  createCanvas(464, 649);
+  createCanvas(windowWidth, windowHeight);
   drawCanvas();
+  
 }
 
 function windowResized() {
@@ -20,12 +32,18 @@ function drawCanvas() {
   //Draw inner layer
   drawOilPainting(canvasWidth, canvasHeight);  
 
+  // Calculate a vertical offset to move the tree lower
+  let verticalOffset = canvasHeight * 0.4;
+
   // Draw roots
-  drawRoots(canvasWidth, canvasHeight); 
+  drawRoots(canvasWidth, canvasHeight*0.8+verticalOffset); 
   // Draw bottom rectangle
-  drawBottomRectangle(canvasWidth, canvasHeight); 
+  drawBottomRectangle(canvasWidth, canvasHeight*0.8+verticalOffset); 
   // Draw branches and apples
-  drawBranchesAndApples(canvasWidth, canvasHeight); 
+  drawBranchesAndApples(canvasWidth, canvasHeight *0.8+verticalOffset); 
+
+  // Draw the sun with adjustments for space
+  drawSun(canvasWidth, canvasHeight);
   }
 
   function drawRoots(canvasWidth, canvasHeight) {
@@ -117,28 +135,39 @@ function drawApplesOnRectangle(rectX, rectY, rectW, rectH) {
     }
 }
 
+
+let specifiedBranch;
+
 function drawBranchesAndApples(canvasWidth, canvasHeight) {
+
+  let startY = canvasHeight * 0.15;
+
   // Draw branches and apples
   let branches = [
-    new Branch(85 / 464 * canvasWidth, 40 / 649 * canvasHeight, 90 / 464 * canvasWidth, 135 / 649 * canvasHeight),
-    new Branch(90 / 464 * canvasWidth, 135 / 649 * canvasHeight, 125 / 464 * canvasWidth, 132 / 649 * canvasHeight),
-    new Branch(125 / 464 * canvasWidth, 132 / 649 * canvasHeight, 123 / 464 * canvasWidth, 265 / 649 * canvasHeight),
-    new Branch(123 / 464 * canvasWidth, 265 / 649 * canvasHeight, 330 / 464 * canvasWidth, 265 / 649 * canvasHeight),
-    new Branch(330 / 464 * canvasWidth, 265 / 649 * canvasHeight, 328 / 464 * canvasWidth, 110 / 649 * canvasHeight),
-    new Branch(328 / 464 * canvasWidth, 110 / 649 * canvasHeight, 400 / 464 * canvasWidth, 125 / 649 * canvasHeight),
-    new Branch(400 / 464 * canvasWidth, 125 / 649 * canvasHeight, 400 / 464 * canvasWidth, 100 / 649 * canvasHeight),
-    new Branch(232 / 464 * canvasWidth, 255 / 649 * canvasHeight, 232 / 464 * canvasWidth, 195 / 649 * canvasHeight),
-    new Branch(160 / 464 * canvasWidth, 195 / 649 * canvasHeight, 275 / 464 * canvasWidth, 195 / 649 * canvasHeight),
-    new Branch(180 / 464 * canvasWidth, 195 / 649 * canvasHeight, 180 / 464 * canvasWidth, 170 / 649 * canvasHeight),
-    new Branch(275 / 464 * canvasWidth, 195 / 649 * canvasHeight, 275 / 464 * canvasWidth, 170 / 649 * canvasHeight),
-    new Branch(232 / 464 * canvasWidth, 255 / 649 * canvasHeight, 232 / 464 * canvasWidth, 485 / 649 * canvasHeight)
+    new Branch(85 / 464 * canvasWidth, startY +40 / 649 * canvasHeight, 90 / 464 * canvasWidth, startY+135 / 649 * canvasHeight),
+    new Branch(90 / 464 * canvasWidth, startY +135 / 649 * canvasHeight, 125 / 464 * canvasWidth, startY+132 / 649 * canvasHeight),
+    new Branch(125 / 464 * canvasWidth, startY +132 / 649 * canvasHeight, 123 / 464 * canvasWidth, startY+265 / 649 * canvasHeight),
+    new Branch(123 / 464 * canvasWidth, startY +265 / 649 * canvasHeight, 330 / 464 * canvasWidth, startY+265 / 649 * canvasHeight),
+    new Branch(330 / 464 * canvasWidth, startY +265 / 649 * canvasHeight, 328 / 464 * canvasWidth, startY+110 / 649 * canvasHeight),
+    new Branch(328 / 464 * canvasWidth, startY +110 / 649 * canvasHeight, 400 / 464 * canvasWidth, startY+125 / 649 * canvasHeight),
+    new Branch(232 / 464 * canvasWidth, startY+255 / 649 * canvasHeight, 232 / 464 * canvasWidth, startY+195 / 649 * canvasHeight),
+    new Branch(160 / 464 * canvasWidth, startY+195 / 649 * canvasHeight, 275 / 464 * canvasWidth, startY+195 / 649 * canvasHeight),
+    new Branch(180 / 464 * canvasWidth, startY+195 / 649 * canvasHeight, 180 / 464 * canvasWidth, startY+170 / 649 * canvasHeight),
+    new Branch(275 / 464 * canvasWidth, startY+195 / 649 * canvasHeight, 275 / 464 * canvasWidth, startY+170 / 649 * canvasHeight),
+    new Branch(232 / 464 * canvasWidth, startY+ 100 / 649 * canvasHeight, 235 / 464 * canvasWidth, startY+390 / 649 * canvasHeight)
   ];
+
+  //Adjust the branch position that previously drawed by group
+  specifiedBranch = branches.find(branch => branch.y1 === startY + 100 / 649 * canvasHeight);
+
   branches.forEach(branch => {
     branch.addApples(12); // Add apples to each branch
     branch.drawApples(); // Draw the apples
     branch.drawBranch(); // Draw the branch
   });
 }
+
+
 
 
 
@@ -185,6 +214,9 @@ class Branch {
         let t = (spacing * (i + 3)) / dist(this.x1, this.y1, this.x2, this.y2);
         apple.setPosition(lerp(this.x1, this.x2, t), lerp(this.y1, this.y2, t));
 
+        if (this === specifiedBranch) {
+          apple.y -= 60; // Move the apple upwards by 40 units
+      }
         // Limit the number of attempts to position each apple to prevent infinite loops
         if (attempts++ > maxAttempts) {
           break;
@@ -255,4 +287,14 @@ class Apple {
       arc(this.x, this.y, this.diameter, this.diameter, HALF_PI, -HALF_PI);
     }
   }
+}
+
+function drawSun(canvasWidth, canvasHeight) {
+  let sunSize = min(canvasWidth, canvasHeight) * 0.15; // Adjust size relative to canvas size
+  let sunX = canvasWidth * 0.1; // Adjust position relative to canvas width
+  let sunY = canvasHeight * 0.11; // Adjust position relative to canvas height
+
+  fill(255, 255, 204, 200);
+  noStroke();
+  ellipse(sunX, sunY, sunSize, sunSize);
 }
