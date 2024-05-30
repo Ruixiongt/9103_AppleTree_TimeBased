@@ -9,6 +9,8 @@ TODO: ADD All Object for four seasons
  TODO: Set four seasons with frame count
 */
 
+
+
 function setup() {
   // Set the canvas size
   createCanvas(windowWidth, windowHeight);
@@ -21,6 +23,15 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   drawCanvas();
 }
+
+
+function draw() {
+  // Refresh the canvas
+  //drawCanvas();
+  
+}
+
+
 
 function drawCanvas() {
   let canvasWidth = width;
@@ -36,7 +47,7 @@ function drawCanvas() {
   let verticalOffset = canvasHeight * 0.4;
 
   // Draw roots
-  drawRoots(canvasWidth, canvasHeight*0.8+verticalOffset); 
+   drawRoots(canvasWidth, canvasHeight*0.8+verticalOffset); 
   // Draw bottom rectangle
   drawBottomRectangle(canvasWidth, canvasHeight*0.8+verticalOffset); 
   // Draw branches and apples
@@ -44,6 +55,12 @@ function drawCanvas() {
 
   // Draw the sun with adjustments for space
   drawSun(canvasWidth, canvasHeight);
+
+   // Draw cloud and raindrops
+   //drawCloudAndRaindrops(canvasWidth, canvasHeight);
+ 
+  
+
   }
 
   function drawRoots(canvasWidth, canvasHeight) {
@@ -184,8 +201,8 @@ class Branch {
 
   // Draws the branch as a line from its start to end points
   drawBranch() {
-    stroke(0, 0, 0);  
-    strokeWeight(1.2); 
+    stroke(64, 43, 48);  
+    strokeWeight(2.5); 
     // Draw the line representing the branch
     line(this.x1, this.y1, this.x2, this.y2); 
   }
@@ -259,7 +276,8 @@ class Apple {
     this.x = 0;  // x-coordinate of the apple's center
     this.y = 0;  // y-coordinate of the apple's center
     this.diameter = diameter;  // Diameter of the apple
-    this.color1 = color(251, 88, 87);  // One side color - red
+    //this.color1 = color(251, 88, 87);  // One side color - red
+    this.color1 = color(135, 173, 128); 
     this.color2 = color(135, 173, 128);  // Another side color - green
   }
 
@@ -294,7 +312,43 @@ function drawSun(canvasWidth, canvasHeight) {
   let sunX = canvasWidth * 0.1; // Adjust position relative to canvas width
   let sunY = canvasHeight * 0.11; // Adjust position relative to canvas height
 
-  fill(255, 255, 204, 200);
+  // Define inner and outer colors for the sun (red and yellow)
+  let innerColor = color(255, 200, 100); 
+  let outerColor = color(255, 50, 10);
+
+  // Draw the sun using a gradient based on distance from the center
+  for (let x = 0; x < sunSize; x++) {
+    let percent = map(x, 0, sunSize, 0, 1);
+    let sunColor = lerpColor(innerColor, outerColor, percent); // Get the color at this point of the gradient
+    fill(sunColor); // Set the fill color
+    noStroke();
+    ellipse(sunX, sunY, sunSize - x, sunSize - x); // Draw the sun with the calculated color
+  }
+}
+
+function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
+  let cloudX = canvasWidth / 2;
+  let cloudY = canvasHeight * 0.11;
+  let cloudWidth = canvasWidth * 0.5;
+  let cloudHeight = canvasHeight * 0.15;
+
+  // Draw cloud
+  let cloudColor = color(230, 230, 230);
+  fill(cloudColor);
   noStroke();
-  ellipse(sunX, sunY, sunSize, sunSize);
+  ellipse(cloudX - cloudWidth * 0.3, cloudY, cloudWidth * 0.3, cloudHeight * 0.7);
+  ellipse(cloudX, cloudY, cloudWidth * 0.5, cloudHeight);
+  ellipse(cloudX + cloudWidth * 0.3, cloudY, cloudWidth * 0.28, cloudHeight * 0.65);
+
+  // Draw raindrops with larger size
+  let raindropCount = 6;
+  let raindropWidth = 15; // Increase width
+  let raindropHeight = 30; // Increase height
+  
+  fill(135, 206, 235); // Light blue color for raindrops
+  for (let i = 0; i < raindropCount; i++) {
+    let dropX = random(cloudX - cloudWidth * 0.5, cloudX + cloudWidth * 0.5);
+    let dropY = cloudY + cloudHeight * 0.3 + random(0, 50);
+    ellipse(dropX, dropY, raindropWidth, raindropHeight);
+  }
 }
