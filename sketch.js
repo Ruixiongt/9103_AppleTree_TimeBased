@@ -1,25 +1,22 @@
-/*
-TODO: ADD All Object for four seasons 
-           (4) Wind - Wind
-           (5) Snow 
-            (6) Fallen  Apples
 
-
- TODO: Set four seasons with frame count
-*/
 let branches;
 let cloudVisible = true; // Variable to track if the cloud is visible// Flag to track if the color transition has started
 let startColor, endColor; // Define start and end colors
 let verticalOffset ; // Offset to adjust the y position of apple tree initially drawn by group
 let sunXStart, sunYStart;
+let prevSunX; 
 
 function setup() {
   // Set the canvas size
   createCanvas(windowWidth, windowHeight);
   drawCanvas();
   // Define start and end colors
-  startColor = color(135, 173, 128); // Green color
-  endColor = color(251, 88, 87); // Red color
+  startColor = color(135, 173, 128); 
+  endColor = color(251, 88, 87); 
+
+  // Initialise Sun position
+  sunXStart = width * 0.1; 
+  sunYStart = height * 0.1; 
 }
 
 function windowResized() {
@@ -28,25 +25,34 @@ function windowResized() {
   drawCanvas();
 }
 
-// TODO: Add comments
+
 function draw() {
   // Only update elements that change over time
   if (frameCount === 1) {
     drawCanvas();
   }
 
+
+  //When frameCount >= 200, started rainning
   if (frameCount >= 200) {
     if (cloudVisible) {
       drawCloudAndRaindrops(width, height);
     }
   }
 
+  //When frameCount equals 500, cloud invisible
   if (frameCount === 500) {
     cloudVisible = false;
     drawCanvas();
-    drawSun(width, height);
+  
   }
 
+   //When frameCount >500, sun coming
+  if(frameCount>500){
+    drawSun(width, height);
+  }
+ 
+  //When frameCount eqauls 600, apples on the tree
   if (frameCount === 600) {
     verticalOffset = height * 0.4;
     drawBottomRectangle(width, height * 0.8 + verticalOffset);
@@ -56,6 +62,7 @@ function draw() {
     });
   }
 
+  //When frameCount eqauls 750, aplles started to be ripe
   if (frameCount === 750) {
     drawHalfRedHalfGreenApples();
 
@@ -77,7 +84,7 @@ function draw() {
    // Ripe apples to be all red when framecount is 900
    if (frameCount === 950) {
     drawCanvas();
-    drawSun(width, height);
+   
 
     // Draw fallen apples
   for (let i = 0; i < 15; i++) {
@@ -257,7 +264,6 @@ function drawApplesOnBranches(canvasWidth, canvasHeight) {
     branches.forEach(branch => {
       branch.apples.forEach(apple => {
         apple.color1 =  color(251, 88, 87); // Draw the apple half red and half green
-        console.log(branch.apples)
       });
      
     });
@@ -270,7 +276,6 @@ function drawApplesOnBranches(canvasWidth, canvasHeight) {
       branch.apples.forEach(apple => {
         apple.color1 = endColor;
         apple.color2 = endColor;
-        console.log(branch.apples)
       });
      
     });
@@ -396,15 +401,30 @@ class Apple {
   }
 }
 
-function drawSun(canvasWidth, canvasHeight) {
-  let sunSize = min(canvasWidth, canvasHeight) * 0.15; // Adjust size relative to canvas size
-  let sunX = canvasWidth * 0.1; // Adjust position relative to canvas width
-  let sunY = canvasHeight * 0.11; // Adjust position relative to canvas height
-
+function drawSun() {
+  let sunSize = min(width, height) * 0.15; // Adjust size relative to canvas size
+  
+  // Use Perlin noise for horizontal movement of the sun
+  let noiseVal = noise(frameCount * 0.0005); // Perlin noise value
+  
+  // Calculate the x-position of the sun based on Perlin noise
+  let sunX = sunXStart + noiseVal * (width * 0.3); // Adjust the range as needed
+  
+  let sunY = sunYStart; // Y-position of the sun (constant)
+  
+  // Set the fill color to the background color
+  fill(146, 157, 155);
+  
+  // Erase the previous sun position by drawing a circle with the background color
+  ellipse(prevSunX, sunY, sunSize, sunSize);
+  
+  // Update the previous sun position to the current sun position
+  prevSunX = sunX;
+  
   // Define inner and outer colors for the sun (red and yellow)
   let innerColor = color(255, 200, 100); 
   let outerColor = color(255, 50, 10);
-
+  
   // Draw the sun using a gradient based on distance from the center
   for (let x = 0; x < sunSize; x++) {
     let percent = map(x, 0, sunSize, 0, 1);
@@ -418,6 +438,8 @@ function drawSun(canvasWidth, canvasHeight) {
 let raindrops = []; // Array to store raindrop objects
 let lastDropFrame = 0; // Variable to store the frame count of the last raindrop creation
 
+
+//Draw sun with Perlin Noise
 function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
   // Check if the cloud should be drawn based on the cloudVisible variable
   if (cloudVisible) {
