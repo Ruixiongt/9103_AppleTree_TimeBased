@@ -10,6 +10,7 @@ TODO: ADD All Object for four seasons
 let branches;
 let cloudVisible = true; // Variable to track if the cloud is visible// Flag to track if the color transition has started
 let startColor, endColor; // Define start and end colors
+let verticalOffset ; // Offset to adjust the y position of apple tree initially drawn by group
 
 function setup() {
   // Set the canvas size
@@ -46,7 +47,7 @@ function draw() {
   }
 
   if (frameCount === 600) {
-    let verticalOffset = height * 0.4;
+    verticalOffset = height * 0.4;
     drawBottomRectangle(width, height * 0.8 + verticalOffset);
     drawApplesOnBranches(width, height * 0.8 + verticalOffset);
     branches.forEach(branch => {
@@ -55,8 +56,6 @@ function draw() {
   }
 
   if (frameCount === 750) {
-
-    let verticalOffset = height * 0.4;
     drawHalfRedHalfGreenApples();
 
     drawApplesOnBranches(width, height * 0.8 + verticalOffset);
@@ -64,6 +63,16 @@ function draw() {
       branch.drawBranch(); // Draw the branch
     });
   }
+  
+  // Ripe apples to be all red when framecount is 900
+  if (frameCount === 900) {
+     drawRedApples();
+     drawApplesOnBranches(width, height * 0.8 + verticalOffset);
+     branches.forEach(branch => {
+       branch.drawBranch(); // Draw the branch
+     });
+  }
+
   
  
 }
@@ -234,7 +243,19 @@ function drawApplesOnBranches(canvasWidth, canvasHeight) {
     });
 
   }
+ 
+  //Make all apples to be red
+  function drawRedApples() {
+    branches.forEach(branch => {
+      branch.apples.forEach(apple => {
+        apple.color1 = endColor;
+        apple.color2 = endColor;
+        console.log(branch.apples)
+      });
+     
+    });
 
+  }
 
 // Branch class for managing the drawing of branches and apples
 class Branch {
