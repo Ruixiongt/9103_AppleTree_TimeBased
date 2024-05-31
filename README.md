@@ -67,4 +67,4 @@ The animation progresses through different stages, illustrating the growth, matu
 
 
 ## Citation and refernces 
-**lerpcolor** was used to draw the gradient color change of the sun
+**lerpcolor()** was used to draw the gradient color change of the sun
