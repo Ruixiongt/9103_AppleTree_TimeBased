@@ -54,6 +54,10 @@ function draw() {
     let verticalOffset = height * 0.4;
     drawBottomRectangle(width, height * 0.8 + verticalOffset);
     drawApplesOnBranches(width, height * 0.8 + verticalOffset);
+    //Update branch 
+    branches.forEach(branch => {
+      branch.drawBranch(); // Draw the branch
+    });
   }
 }
 
@@ -194,10 +198,13 @@ function drawBranchesAndApples(canvasWidth, canvasHeight) {
   //Adjust the branch position that previously drawed by group
   specifiedBranch = branches.find(branch => branch.y1 === startY + 100 / 649 * canvasHeight);
 
+ 
+
   branches.forEach(branch => {
-   branch.addApples(12); // Add apples to each branch
+    branch.addApples(12); // Add apples to each branch
    // branch.drawApples(); // Draw the apples
     branch.drawBranch(); // Draw the branch
+   
   });
 }
 
