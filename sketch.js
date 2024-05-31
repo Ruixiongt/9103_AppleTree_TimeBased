@@ -34,23 +34,21 @@ function draw() {
     drawCanvas();
   }
 
-  if (frameCount === 200) {
+  if (frameCount >= 200) {
     if (cloudVisible) {
       drawCloudAndRaindrops(width, height);
     }
   }
 
   if (frameCount === 400) {
-    drawSun(width, height);
+   
     cloudVisible = false;
     drawCanvas();
-  }
-
-  if (frameCount === 600) {
     drawSun(width, height);
   }
 
-  if (frameCount === 800) {
+
+  if (frameCount === 600) {
     let verticalOffset = height * 0.4;
     drawBottomRectangle(width, height * 0.8 + verticalOffset);
     drawApplesOnBranches(width, height * 0.8 + verticalOffset);
