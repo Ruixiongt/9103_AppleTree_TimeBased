@@ -11,6 +11,7 @@ let branches;
 let cloudVisible = true; // Variable to track if the cloud is visible// Flag to track if the color transition has started
 let startColor, endColor; // Define start and end colors
 let verticalOffset ; // Offset to adjust the y position of apple tree initially drawn by group
+let sunXStart, sunYStart;
 
 function setup() {
   // Set the canvas size
@@ -72,6 +73,25 @@ function draw() {
        branch.drawBranch(); // Draw the branch
      });
   }
+
+   // Ripe apples to be all red when framecount is 900
+   if (frameCount === 950) {
+    drawCanvas();
+    drawSun(width, height);
+
+    // Draw fallen apples
+  for (let i = 0; i < 15; i++) {
+    let circleX = random(width); 
+    let circleY = random(height*0.85, height*0.88); 
+    let circleSize = random(30, 80); 
+
+    fill(251, 88, 87); 
+    noStroke();
+    ellipse(circleX, circleY, circleSize, circleSize); // draw apples
+  }
+ }
+
+   
 
   
  
