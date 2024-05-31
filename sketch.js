@@ -7,17 +7,18 @@ TODO: ADD All Object for four seasons
 
  TODO: Set four seasons with frame count
 */
-
 let branches;
 let cloudVisible = true; // Variable to track if the cloud is visible
-
-
+let transitionStarted = false; // Flag to track if the color transition has started
+let startColor, endColor; // Define start and end colors
 
 function setup() {
   // Set the canvas size
   createCanvas(windowWidth, windowHeight);
   drawCanvas();
-  
+  // Define start and end colors
+  startColor = color(135, 173, 128); // Green color
+  endColor = color(251, 88, 87); // Red color
 }
 
 function windowResized() {
@@ -26,8 +27,7 @@ function windowResized() {
   drawCanvas();
 }
 
-
-//TODO: Add comments
+// TODO: Add comments
 function draw() {
   // Only update elements that change over time
   if (frameCount === 1) {
@@ -41,22 +41,20 @@ function draw() {
   }
 
   if (frameCount === 500) {
-   
     cloudVisible = false;
     drawCanvas();
     drawSun(width, height);
   }
 
-
   if (frameCount === 600) {
     let verticalOffset = height * 0.4;
     drawBottomRectangle(width, height * 0.8 + verticalOffset);
     drawApplesOnBranches(width, height * 0.8 + verticalOffset);
-    //Update branch 
     branches.forEach(branch => {
       branch.drawBranch(); // Draw the branch
     });
   }
+
 }
 
 function drawCanvas() {
@@ -364,8 +362,8 @@ function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
   if (cloudVisible) {
     let cloudX = canvasWidth / 2;
     let cloudY = canvasHeight * 0.11;
-    let cloudWidth = canvasWidth * 0.5;
-    let cloudHeight = canvasHeight * 0.15;
+    let cloudWidth = canvasWidth * 1.1;
+    let cloudHeight = canvasHeight * 0.16;
 
     // Draw cloud
     let cloudColor = color(230, 230, 230);
@@ -378,17 +376,20 @@ function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
     // Add new raindrops every 15 frames
     if (frameCount - lastDropFrame >= 15) {
       let dropX = random(cloudX - cloudWidth * 0.5, cloudX + cloudWidth * 0.5);
-      let dropY = random(cloudY, cloudY + cloudHeight * 0.4); // Start raindrop within the cloud region
+      let dropY = random(cloudY, cloudY + cloudHeight * 0.9); // Start raindrop within the cloud region
       raindrops.push({ x: dropX, y: dropY }); // Add the new raindrop to the array
       lastDropFrame = frameCount; // Update the last drop frame
     }
 
-    fill(135, 206, 235); // Light blue color for raindrops
+    fill(135, 206, 235); 
 
-    // Draw each raindrop
     for (let i = 0; i < raindrops.length; i++) {
       let drop = raindrops[i];
-      ellipse(drop.x, canvasHeight*0.12+ drop.y, 15, 30); // Draw raindrop at its position
+      let dropLength = random(25, 50); // Random raindrop
+      let dropWidth = 4; // Set the width of the raindrop
+      
+      // Draw raindrop at its position with randomized length and fixed width
+      ellipse(drop.x, canvasHeight * 0.12 + drop.y, dropWidth, dropLength);
     }
   }
 }
