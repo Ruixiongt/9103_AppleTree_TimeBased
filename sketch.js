@@ -1,13 +1,15 @@
 /*
 TODO: ADD All Object for four seasons 
-           (1)Sun -function  
-           (2)Rain Drops - function
-           (3) Cloud - Class 
            (4) Wind - Wind
+           (5) Snow 
+            (6) Fallen  Apples
 
-           (5) Shadow
+
  TODO: Set four seasons with frame count
 */
+
+let branches;
+let cloudVisible = true; // Variable to track if the cloud is visible
 
 
 
@@ -25,43 +27,58 @@ function windowResized() {
 }
 
 
+//TODO: Add comments
 function draw() {
-  // Refresh the canvas
-  //drawCanvas();
-  
+  // Only update elements that change over time
+  if (frameCount === 1) {
+    drawCanvas();
+  }
+
+  if (frameCount === 200) {
+    if (cloudVisible) {
+      drawCloudAndRaindrops(width, height);
+    }
+  }
+
+  if (frameCount === 400) {
+    drawSun(width, height);
+    cloudVisible = false;
+    drawCanvas();
+  }
+
+  if (frameCount === 600) {
+    drawSun(width, height);
+  }
+
+  if (frameCount === 800) {
+    let verticalOffset = height * 0.4;
+    drawBottomRectangle(width, height * 0.8 + verticalOffset);
+    drawApplesOnBranches(width, height * 0.8 + verticalOffset);
+  }
 }
-
-
 
 function drawCanvas() {
   let canvasWidth = width;
   let canvasHeight = height;
 
   // Set the background color
-  background(146, 157, 155); 
+  background(146, 157, 155);
   noStroke();
-  //Draw inner layer
-  drawOilPainting(canvasWidth, canvasHeight);  
+  // Draw inner layer
+  drawOilPainting(canvasWidth, canvasHeight);
 
   // Calculate a vertical offset to move the tree lower
   let verticalOffset = canvasHeight * 0.4;
 
   // Draw roots
-   drawRoots(canvasWidth, canvasHeight*0.8+verticalOffset); 
+  drawRoots(canvasWidth, canvasHeight * 0.8 + verticalOffset);
   // Draw bottom rectangle
-  drawBottomRectangle(canvasWidth, canvasHeight*0.8+verticalOffset); 
-  // Draw branches and apples
-  drawBranchesAndApples(canvasWidth, canvasHeight *0.8+verticalOffset); 
+  //drawBottomRectangle(canvasWidth, canvasHeight * 0.8 + verticalOffset);
 
-  // Draw the sun with adjustments for space
-  drawSun(canvasWidth, canvasHeight);
+  drawBranchesAndApples(canvasWidth, canvasHeight * 0.8 + verticalOffset);
 
-   // Draw cloud and raindrops
-   //drawCloudAndRaindrops(canvasWidth, canvasHeight);
- 
   
-
-  }
+}
 
   function drawRoots(canvasWidth, canvasHeight) {
   // Calculate and draw the roots rectangle
@@ -160,7 +177,7 @@ function drawBranchesAndApples(canvasWidth, canvasHeight) {
   let startY = canvasHeight * 0.15;
 
   // Draw branches and apples
-  let branches = [
+   branches = [
     new Branch(85 / 464 * canvasWidth, startY +40 / 649 * canvasHeight, 90 / 464 * canvasWidth, startY+135 / 649 * canvasHeight),
     new Branch(90 / 464 * canvasWidth, startY +135 / 649 * canvasHeight, 125 / 464 * canvasWidth, startY+132 / 649 * canvasHeight),
     new Branch(125 / 464 * canvasWidth, startY +132 / 649 * canvasHeight, 123 / 464 * canvasWidth, startY+265 / 649 * canvasHeight),
@@ -178,11 +195,19 @@ function drawBranchesAndApples(canvasWidth, canvasHeight) {
   specifiedBranch = branches.find(branch => branch.y1 === startY + 100 / 649 * canvasHeight);
 
   branches.forEach(branch => {
-    branch.addApples(12); // Add apples to each branch
-    branch.drawApples(); // Draw the apples
+   branch.addApples(12); // Add apples to each branch
+   // branch.drawApples(); // Draw the apples
     branch.drawBranch(); // Draw the branch
   });
 }
+
+
+function drawApplesOnBranches(canvasWidth, canvasHeight) {
+    branches.forEach(branch => {
+      branch.drawApples(12);
+    });
+  }
+
 
 
 
@@ -327,28 +352,31 @@ function drawSun(canvasWidth, canvasHeight) {
 }
 
 function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
-  let cloudX = canvasWidth / 2;
-  let cloudY = canvasHeight * 0.11;
-  let cloudWidth = canvasWidth * 0.5;
-  let cloudHeight = canvasHeight * 0.15;
+  // Check if the cloud should be drawn based on the cloudVisible variable
+  if (cloudVisible) {
+    let cloudX = canvasWidth / 2;
+    let cloudY = canvasHeight * 0.11;
+    let cloudWidth = canvasWidth * 0.5;
+    let cloudHeight = canvasHeight * 0.15;
 
-  // Draw cloud
-  let cloudColor = color(230, 230, 230);
-  fill(cloudColor);
-  noStroke();
-  ellipse(cloudX - cloudWidth * 0.3, cloudY, cloudWidth * 0.3, cloudHeight * 0.7);
-  ellipse(cloudX, cloudY, cloudWidth * 0.5, cloudHeight);
-  ellipse(cloudX + cloudWidth * 0.3, cloudY, cloudWidth * 0.28, cloudHeight * 0.65);
+    // Draw cloud
+    let cloudColor = color(230, 230, 230);
+    fill(cloudColor);
+    noStroke();
+    ellipse(cloudX - cloudWidth * 0.3, cloudY, cloudWidth * 0.3, cloudHeight * 0.7);
+    ellipse(cloudX, cloudY, cloudWidth * 0.5, cloudHeight);
+    ellipse(cloudX + cloudWidth * 0.3, cloudY, cloudWidth * 0.28, cloudHeight * 0.65);
 
-  // Draw raindrops with larger size
-  let raindropCount = 6;
-  let raindropWidth = 15; // Increase width
-  let raindropHeight = 30; // Increase height
-  
-  fill(135, 206, 235); // Light blue color for raindrops
-  for (let i = 0; i < raindropCount; i++) {
-    let dropX = random(cloudX - cloudWidth * 0.5, cloudX + cloudWidth * 0.5);
-    let dropY = cloudY + cloudHeight * 0.3 + random(0, 50);
-    ellipse(dropX, dropY, raindropWidth, raindropHeight);
+    // Draw raindrops with larger size
+    let raindropCount = 6;
+    let raindropWidth = 15; // Increase width
+    let raindropHeight = 30; // Increase height
+    
+    fill(135, 206, 235); // Light blue color for raindrops
+    for (let i = 0; i < raindropCount; i++) {
+      let dropX = random(cloudX - cloudWidth * 0.5, cloudX + cloudWidth * 0.5);
+      let dropY = cloudY + cloudHeight * 0.3 + random(0, 50);
+      ellipse(dropX, dropY, raindropWidth, raindropHeight);
+    }
   }
 }
