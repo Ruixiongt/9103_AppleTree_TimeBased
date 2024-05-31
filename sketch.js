@@ -40,7 +40,7 @@ function draw() {
     }
   }
 
-  if (frameCount === 400) {
+  if (frameCount === 500) {
    
     cloudVisible = false;
     drawCanvas();
@@ -356,6 +356,9 @@ function drawSun(canvasWidth, canvasHeight) {
   }
 }
 
+let raindrops = []; // Array to store raindrop objects
+let lastDropFrame = 0; // Variable to store the frame count of the last raindrop creation
+
 function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
   // Check if the cloud should be drawn based on the cloudVisible variable
   if (cloudVisible) {
@@ -372,16 +375,20 @@ function drawCloudAndRaindrops(canvasWidth, canvasHeight) {
     ellipse(cloudX, cloudY, cloudWidth * 0.5, cloudHeight);
     ellipse(cloudX + cloudWidth * 0.3, cloudY, cloudWidth * 0.28, cloudHeight * 0.65);
 
-    // Draw raindrops with larger size
-    let raindropCount = 6;
-    let raindropWidth = 15; // Increase width
-    let raindropHeight = 30; // Increase height
-    
-    fill(135, 206, 235); // Light blue color for raindrops
-    for (let i = 0; i < raindropCount; i++) {
+    // Add new raindrops every 15 frames
+    if (frameCount - lastDropFrame >= 15) {
       let dropX = random(cloudX - cloudWidth * 0.5, cloudX + cloudWidth * 0.5);
-      let dropY = cloudY + cloudHeight * 0.3 + random(0, 50);
-      ellipse(dropX, dropY, raindropWidth, raindropHeight);
+      let dropY = random(cloudY, cloudY + cloudHeight * 0.4); // Start raindrop within the cloud region
+      raindrops.push({ x: dropX, y: dropY }); // Add the new raindrop to the array
+      lastDropFrame = frameCount; // Update the last drop frame
+    }
+
+    fill(135, 206, 235); // Light blue color for raindrops
+
+    // Draw each raindrop
+    for (let i = 0; i < raindrops.length; i++) {
+      let drop = raindrops[i];
+      ellipse(drop.x, canvasHeight*0.12+ drop.y, 15, 30); // Draw raindrop at its position
     }
   }
 }
