@@ -8,8 +8,7 @@ TODO: ADD All Object for four seasons
  TODO: Set four seasons with frame count
 */
 let branches;
-let cloudVisible = true; // Variable to track if the cloud is visible
-let transitionStarted = false; // Flag to track if the color transition has started
+let cloudVisible = true; // Variable to track if the cloud is visible// Flag to track if the color transition has started
 let startColor, endColor; // Define start and end colors
 
 function setup() {
@@ -55,6 +54,18 @@ function draw() {
     });
   }
 
+  if (frameCount === 750) {
+
+    let verticalOffset = height * 0.4;
+    drawHalfRedHalfGreenApples();
+
+    drawApplesOnBranches(width, height * 0.8 + verticalOffset);
+    branches.forEach(branch => {
+      branch.drawBranch(); // Draw the branch
+    });
+  }
+  
+ 
 }
 
 function drawCanvas() {
@@ -213,7 +224,16 @@ function drawApplesOnBranches(canvasWidth, canvasHeight) {
 
 
 
+  function drawHalfRedHalfGreenApples() {
+    branches.forEach(branch => {
+      branch.apples.forEach(apple => {
+        apple.color1 =  color(251, 88, 87); // Draw the apple half red and half green
+        console.log(branch.apples)
+      });
+     
+    });
 
+  }
 
 
 // Branch class for managing the drawing of branches and apples
